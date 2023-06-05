@@ -1,6 +1,6 @@
 ## Description
 
-Course project to learn nestjs;
+Course project to learn nestjs;.
 
 ## Installation
 
@@ -66,3 +66,4 @@ async function bootstrap() {
 }
 bootstrap();
 ```
+
