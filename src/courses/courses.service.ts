@@ -1,24 +1,29 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { Course } from './entities/course.entity';
-
-const courses: Course[] = [{
-  "id": "aa535a29-09d7-4d45-894a-a5ea258f4a07",
-  "name": "Fitoterapia",
-  "description":"Curso livre de Fitoterapia",
-  "price":50,
-  "tags":["saúde","bem-estar"]
-}];
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { Tag } from './entities/tags.entity';
+import { CreateCourse } from './dto/course.dto';
 
 @Injectable()
 export class CoursesService {
 
+constructor(
+  @InjectRepository(Course)
+  private readonly courseRepository: Repository<Course>,
+  @InjectRepository(Tag)
+  private readonly tagRepository: Repository<Tag>
+) {
+
+}
+
 async  findAll(): Promise<Course[]> {
-    return courses;
+    return this.courseRepository.find();
   }
 
 
   async  findOne(id: string): Promise<Course> {
-    const course = courses.filter((course : Course) => course.id === id)[0];
+    const course = await this.courseRepository.findOne({select: ['id','name','description','price','tags'], where: {id}});
     if(!course){
       throw new NotFoundException('Course not found');
     }
@@ -27,32 +32,47 @@ async  findAll(): Promise<Course[]> {
       
   }
 
-  async  create(body: Course){
-    courses.push(body);
-    return body;  
+  async  create(body: CreateCourse){
+    const tags = await Promise.all(body.tags.map(tag => this.preloadTagByName(tag)));
+    const course =  await this.courseRepository.create({...body, tags});
+    return this.courseRepository.save(course);  
   }
 
   async  update(id: string, body: Course){
-    const coursePosition = courses.findIndex((course : Course) => course.id === id);
+    await this.removeTagsFromCourse(body);
+    const tags = await Promise.all(body.tags.map(tag => this.preloadTagByName(tag.name)));
+    const course =  await this.courseRepository.preload({id, ...body, tags});
 
-    if(coursePosition === -1){
+    if(!course){
       throw new NotFoundException('Course not found');
     }
-    courses[coursePosition] = body;
-    return courses[coursePosition];
+   return this.courseRepository.save(course);  
       
   }
 
   async  remove(id: string){
-    const coursePosition = courses.findIndex((course : Course) => course.id === id);
+    const course = await this.courseRepository.findOne({where: {id}});
 
-    if(coursePosition === -1){
+    if(!course){
       throw new NotFoundException('Course not found');
     }
-    courses.splice(coursePosition,1);
-    return courses;
+    
+    return this.courseRepository.remove(course);
       
   }
 
+  private async preloadTagByName(name: string): Promise<Tag>{
+    const tag = await this.tagRepository.findOne({where:{name}});
+    if(tag){
+      return tag;
+    }
+    return this.tagRepository.create({name});
+  }
+
+  /** @TODO remover tags relacionadas antes de inserir novas */
+  private async removeTagsFromCourse(course: Course){
+    const courseUpdate =  await this.courseRepository.preload({...course, tags: []});
+    return this.courseRepository.save(courseUpdate);
+  }
   
 }
