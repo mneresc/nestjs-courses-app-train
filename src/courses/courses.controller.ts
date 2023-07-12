@@ -26,7 +26,6 @@ export class CoursesController {
   @Patch('/:id')
   async update(@Param('id') id: string, @Body() body): Promise<Course> {
     return await this.appService.update(id,body);
-
   }
 
   @Put('/:id')

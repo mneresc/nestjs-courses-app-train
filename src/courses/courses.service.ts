@@ -18,12 +18,14 @@ constructor(
 }
 
 async  findAll(): Promise<Course[]> {
-    return this.courseRepository.find();
+    return this.courseRepository.find({
+      relations: ['tags']
+    });
   }
 
 
   async  findOne(id: string): Promise<Course> {
-    const course = await this.courseRepository.findOne({select: ['id','name','description','price','tags'], where: {id}});
+    const course = await this.courseRepository.findOne({select: ['id','name','description','price','tags'], where: {id}, relations: ['tags']});
     if(!course){
       throw new NotFoundException('Course not found');
     }

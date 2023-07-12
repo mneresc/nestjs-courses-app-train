@@ -42,6 +42,11 @@ $ nest -g create module <module_name>
 # create class
 $ nest -g create cls /path/to/class
 
+#create migration - needs ormconfig
+$ npx typeorm migration:create  ./src/migrations/CourseRefactory
+
+#run migration
+$  npx typeorm migration:run -d ./ormconfig.js
 ```
 
 ## Validation 
@@ -70,4 +75,3 @@ async function bootstrap() {
 }
 bootstrap();
 ```
-
