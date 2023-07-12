@@ -1,19 +1,38 @@
 version: '3.5'
 services:
-  postgres:
+  app:
+    build: .
+    entrypoint: ./entrypoint.sh
+    container_name: cursonestjs-app
+    ports:
+      - "3001:3000"
+    volumes:
+      - .:/home/node/app
+    depends_on:
+      - db
+  db:
     container_name: postgres_container
     image: postgres
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
       PGDATA: /data/postgres
-    volumes:
-       - postgres:/data/postgres
     ports:
       - "5432:5432"
     networks:
       - postgres
     restart: unless-stopped
+    volumes:
+      - .postgres_data:/var/lib/postgresql/data
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: cursonestjs-pgadmin
+    tty: true
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=admin@admin.com
+      - PGADMIN_DEFAULT_PASSWORD=mangoLokoRunAndBuild
+    ports:
+      - "8000:80"
 networks:
   postgres:
     driver: bridge
