@@ -23,7 +23,7 @@ services:
       - postgres
     restart: unless-stopped
     volumes:
-      - .postgres_data:/var/lib/postgresql/data
+      - ./docker/data:/var/lib/postgresql/data
   pgadmin:
     image: dpage/pgadmin4
     container_name: cursonestjs-pgadmin
