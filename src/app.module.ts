@@ -3,11 +3,11 @@ import { AppController } from './app.controller';
 import { CoursesModule } from './courses/courses.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { configDotenv } from 'dotenv';
+import { ConfigModule } from '@nestjs/config';
 
-configDotenv();
 
 @Module({
-  imports: [CoursesModule, TypeOrmModule.forRoot(
+  imports: [ConfigModule.forRoot(), CoursesModule, TypeOrmModule.forRoot(
    {
     type: process.env.TYPEORM_CONNECTION as any,
     host: process.env.HOST as any,
