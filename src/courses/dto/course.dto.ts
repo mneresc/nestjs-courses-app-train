@@ -5,7 +5,7 @@ export class Course {
   id?: string;
   name: string;
   description: string;
-  price: number;
+  price?: number;
   tags?:string[];
 }
 
@@ -21,7 +21,7 @@ export class CreateCourse {
   readonly description: string;
 
   @IsNumber()
-  readonly price: number;
+  readonly price?: number;
   
   @IsOptional()
   @IsString({each:true})

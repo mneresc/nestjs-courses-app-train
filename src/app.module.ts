@@ -9,14 +9,14 @@ import { ConfigModule } from '@nestjs/config';
 @Module({
   imports: [ConfigModule.forRoot(), CoursesModule, TypeOrmModule.forRoot(
    {
-    type: process.env.TYPEORM_CONNECTION as any,
-    host: process.env.HOST as any,
-    port: process.env.PORT as any,
-    username: process.env.USERNAME as any,
-    password: process.env.PASSWORD as any,
-    database: process.env.DATABASE as any,
-    autoLoadEntities: process.env.AUTOLOADENTITIES as any,
-    synchronize: process.env.SYNCHRONIZE as any,
+    type: process.env.TYPEORM_CONNECTION || "postgres" as any,
+    host: process.env.HOST || "localhost" as any,
+    port: process.env.PORT || "5432" as any,
+    username: process.env.USERNAME || "postgres" as any,
+    password: process.env.PASSWORD || "postgres" as any,
+    database: process.env.DATABASE || "postgres" as any,
+    autoLoadEntities: process.env.AUTOLOADENTITIES || true as any,
+    synchronize: process.env.SYNCHRONIZE || true as any,
    }
   )],
   controllers: [AppController],

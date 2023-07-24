@@ -19,22 +19,18 @@ services:
       PGDATA: /data/postgres
     ports:
       - "5432:5432"
-    networks:
-      - postgres
-    restart: unless-stopped
+    restart: always
+    tty: true
     volumes:
-      - ./docker/data:/var/lib/postgresql/data
+      - ./.docker/data:/var/lib/postgresql/data
   pgadmin:
     image: dpage/pgadmin4
     container_name: cursonestjs-pgadmin
     tty: true
     environment:
       - PGADMIN_DEFAULT_EMAIL=admin@admin.com
-      - PGADMIN_DEFAULT_PASSWORD=mangoLokoRunAndBuild
+      - PGADMIN_DEFAULT_PASSWORD=admin
     ports:
       - "8000:80"
-networks:
-  postgres:
-    driver: bridge
-volumes:
-    postgres:
+    depends_on:
+      - db

@@ -13,7 +13,7 @@ export class Course {
     description: string;
 
     @Column()
-    price: number;
+    price?: number;
 
     @ManyToMany(() => Tag, (tag) => tag.courses, {cascade: true})
     @JoinTable()
