@@ -17,5 +17,5 @@ export class Course {
 
     @ManyToMany(() => Tag, (tag) => tag.courses, {cascade: true})
     @JoinTable()
-    tags: Tag[]
+    tags?: Tag[]
   }
