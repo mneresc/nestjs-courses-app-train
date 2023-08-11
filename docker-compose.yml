@@ -1,15 +1,5 @@
 version: '3.5'
 services:
-  app:
-    build: .
-    entrypoint: ./entrypoint.sh
-    container_name: cursonestjs-app
-    ports:
-      - "3001:3000"
-    volumes:
-      - .:/home/node/app
-    depends_on:
-      - db
   db:
     container_name: pg_container
     image: postgres
@@ -23,6 +13,8 @@ services:
     tty: true
     volumes:
       - ./.docker/data:/var/lib/postgresql/data
+    networks:
+        - product_service_network
   pgadmin:
     image: dpage/pgadmin4
     container_name: cursonestjs-pgadmin
@@ -34,3 +26,44 @@ services:
       - "8000:80"
     depends_on:
       - db
+  mongo:
+    image: mongo
+    restart: always
+    container_name: mongo-docker
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: mongoadmin
+      MONGO_INITDB_ROOT_PASSWORD: mongoadmin
+      #MONGODB_AUTH_DATABASE: admin
+    ports:
+      - "27017:27017"
+    volumes:
+      - ./workspace:/workspace
+      - type: volume
+        source: mongodb_data_volume
+        target: /data/db
+    networks:
+        - product_service_network
+        
+  mongo-express:
+    image: mongo-express
+    container_name: mongo-express
+    restart: always
+    ports:
+      - "28081:8081"
+    environment:
+      ME_CONFIG_MONGODB_SERVER: mongo
+      ME_CONFIG_BASICAUTH_USERNAME: admin
+      ME_CONFIG_BASICAUTH_PASSWORD: changeme
+      #ME_CONFIG_MONGODB_AUTH_DATABASE: admin
+      ME_CONFIG_MONGODB_ADMINUSERNAME: mongoadmin
+      ME_CONFIG_MONGODB_ADMINPASSWORD: mongoadmin
+      ME_CONFIG_MONGODB_URL: mongo://mongoadmin:mongoadmin@mongo:27017/ 
+    depends_on:
+      - mongo
+volumes:
+  mongodb_data_volume:
+    driver: local    
+
+networks:
+    product_service_network:
+        driver: bridge
