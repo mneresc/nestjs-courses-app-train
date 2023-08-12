@@ -6,7 +6,9 @@ import { ConfigModule } from '@nestjs/config';
 import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
 import { MongooseModule } from '@nestjs/mongoose';
+import {realpathSync} from 'fs';
 
+const realPathEnv = realpathSync( '.env');
 
 @Module({
   imports: [
@@ -26,21 +28,10 @@ import { MongooseModule } from '@nestjs/mongoose';
     AuthModule,
     ConfigModule.forRoot({
       isGlobal: true,
-      envFilePath: '../.env'
+      envFilePath: realPathEnv,
     })
   ],
   controllers: [AppController],
   providers: [],
 })
 export class AppModule {}
-
-console.log({
-  type: process.env.TYPE,
-  host: process.env.HOST,
-  port: process.env.PORT,
-  username: process.env.USERNAME_DB,
-  password: process.env.PASSWORD,
-  database: process.env.DATABASE,
-  autoLoadEntities: process.env.AUTOLOADENTITIES,
-  synchronize: process.env.SYNCHRONIZE,
-});
