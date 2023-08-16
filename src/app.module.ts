@@ -23,7 +23,8 @@ const realPathEnv = realpathSync( '.env');
       autoLoadEntities: process.env.AUTOLOADENTITIES || (true as any),
       synchronize: process.env.SYNCHRONIZE || (true as any),
     }),
-    MongooseModule.forRoot('mongodb://127.0.0.1:27017/auth'),
+
+    MongooseModule.forRoot(`mongodb://mongoadmin:mongoadmin@localhost:27017/auth?authSource=admin`),
     UsersModule,
     AuthModule,
     ConfigModule.forRoot({

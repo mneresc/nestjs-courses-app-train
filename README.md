@@ -22,6 +22,9 @@ $ npm run start:dev
 
 # production mode
 $ npm run start:prod
+
+#rename .env
+$ cp .env.exemple .env
 ```
 
 ## Test

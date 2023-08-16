@@ -6,6 +6,7 @@ import { AuthService } from 'src/auth/auth.service';
 import { InjectModel } from '@nestjs/mongoose';
 import { SiginDto } from './dto/signin.dto';
 import { SigupDto } from './dto/signup.dto';
+import { CredentialDto } from './dto/credential.dto';
 
 @Injectable()
 export class UsersService {
@@ -20,7 +21,7 @@ export class UsersService {
     return newUser.save();
   }
 
-  public async signIn(userAuth: SiginDto): Promise<{name: string, jwtToken: string, email: string}> {
+  public async signIn(userAuth: SiginDto): Promise<CredentialDto> {
     const user = await this.findByEmail(userAuth.email );
     const passwordMatch = await this.comparePassword(userAuth.password, user.password);
 
@@ -31,12 +32,13 @@ export class UsersService {
     return {name: user.name, jwtToken: await this.authService.createAccessToken(user._id), email: user.email};
   }
 
+
   public async findAll(): Promise<User[]> {
-    return this.userModel.find().exec();
+    return this.userModel.find({}, {name: 1, email: 1}).exec();
   }
 
   private async findByEmail(email: string): Promise<User> {
-    const user: User = await this.userModel.findOne({ email});
+    const user: User = await this.userModel.findOne({ email}).exec();
 
     if(!user){
       throw new UnauthorizedException("Usuário ou senha inválidos");
