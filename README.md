@@ -85,3 +85,4 @@ bootstrap();
 ## My notes
 
 - Error treatment - Exception Filter https://docs.nestjs.com/exception-filters
+- Interceptor chain: Request -> Middleware -> Interceptor -> Route Handler -> Interceptor
