@@ -1,10 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication, ValidationPipe } from '@nestjs/common';
 import * as request from 'supertest';
-import { AppModule } from './../src/app.module';
-import { after } from 'node:test';
-import { TypeOrmSQLITETestingModule } from '../src/utils-test/type-orm-module';
-import { v4 } from 'uuid';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Course } from '../src/courses/entities/course.entity';
 import { Tag } from '../src/courses/entities/tags.entity';
