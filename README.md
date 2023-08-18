@@ -55,9 +55,9 @@ $ npx typeorm migration:create  ./src/migrations/CourseRefactory
 $  npx typeorm migration:run -d ./ormconfig.js
 ```
 
-## Validation 
+## Validation
 
-1. Install dependencies 
+1. Install dependencies
 
 ```bash
 #install dependencies
@@ -81,3 +81,7 @@ async function bootstrap() {
 }
 bootstrap();
 ```
+
+## My notes
+
+- Error treatment - Exception Filter https://docs.nestjs.com/exception-filters
